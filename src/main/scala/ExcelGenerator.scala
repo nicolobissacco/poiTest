@@ -1,5 +1,5 @@
 import java.io.FileOutputStream
-import java.time.LocalDateTime
+import java.time.{Duration, LocalDateTime}
 import java.time.format.DateTimeFormatter
 
 import org.apache.poi.ss.usermodel.{Sheet, Workbook}
@@ -14,7 +14,9 @@ object ExcelGenerator extends App {
 
   def generateXlsx = (filePath: String, headers: Seq[(String, String)], items: Seq[Map[String, String]]) => {
     val fmt = DateTimeFormatter.ofPattern("HH:mm:ss")
-    println(s"START ${LocalDateTime.now().format(fmt)}")
+
+    val t1 = LocalDateTime.now()
+    println(s"START ${t1.format(fmt)}")
 
     val wb = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE)
     //val wb = new XSSFWorkbook
@@ -25,7 +27,9 @@ object ExcelGenerator extends App {
     saveToFile(wb, filePath);
     wb.dispose
 
-    println(s"END ${LocalDateTime.now().format(fmt)}")
+    val t2 = LocalDateTime.now()
+    println(s"END ${t2.format(fmt)}")
+    println(s"DIFF ${Duration.between(t1, t2).getSeconds}")
   }
 
   def createRows = (wb: Workbook, sheet: Sheet, headers: Seq[String], items: Seq[Map[String, String]]) => {
