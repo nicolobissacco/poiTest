@@ -3,11 +3,11 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 import org.apache.poi.ss.usermodel.{Sheet, Workbook}
-import org.apache.poi.xssf.usermodel.XSSFWorkbook
+import org.apache.poi.xssf.streaming.SXSSFWorkbook
 
 object ExcelGenerator extends App {
   val headers: Seq[(String, String)] = for (i <- 0 until 70) yield (s"ID-${i}", s"DESC-${i}")
-  val products: Seq[Map[String, String]] = for (i <- 0 until 15000) yield (for (c <- 0 until headers.length) yield headers(c)._1 -> s"desc-P${i}-${c}").toMap
+  val products: Seq[Map[String, String]] = for (i <- 0 until 50000) yield (for (c <- 0 until headers.length) yield headers(c)._1 -> s"desc-P${i}-${c}").toMap
 
   generateXlsx("file.xlsx", headers, products)
 
@@ -15,7 +15,6 @@ object ExcelGenerator extends App {
     val fmt = DateTimeFormatter.ofPattern("HH:mm:ss")
     println(s"START ${LocalDateTime.now().format(fmt)}")
 
-    import org.apache.poi.xssf.streaming.SXSSFWorkbook
     val wb = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE)
     val sheet1 = wb.createSheet("Foglio1")
 
