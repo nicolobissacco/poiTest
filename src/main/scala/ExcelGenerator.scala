@@ -7,12 +7,12 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 
 object ExcelGenerator extends App {
-  val headers: Seq[(String, String)] = for (i <- 0 until 70) yield (s"ID-${i}", s"DESC-${i}")
-  val products: Seq[Map[String, String]] = for (i <- 0 until 100000) yield (for (c <- 0 until headers.length) yield headers(c)._1 -> s"desc-P${i}-${c}").toMap
+  val headers: Seq[String] = for (i <- 0 until 70) yield s"ID-${i}"
+  val products: Seq[Map[String, String]] = for (i <- 0 until 100000) yield (for (c <- 0 until headers.length) yield headers(c) -> s"desc-P${i}-${c}").toMap
 
   generateXlsx("file.xlsx", headers, products)
 
-  def generateXlsx = (filePath: String, headers: Seq[(String, String)], items: Seq[Map[String, String]]) => {
+  def generateXlsx = (filePath: String, headers: Seq[String], items: Seq[Map[String, String]]) => {
     val fmt = DateTimeFormatter.ofPattern("HH:mm:ss")
 
     val t1 = LocalDateTime.now()
@@ -22,8 +22,8 @@ object ExcelGenerator extends App {
     //val wb = new XSSFWorkbook
     val sheet1 = wb.createSheet("Foglio1")
 
-    createHeader(wb, sheet1, headers.map(x => x._2))
-    createRows(wb, sheet1, headers.map(x => x._1), items)
+    createHeader(wb, sheet1, headers)
+    createRows(wb, sheet1, headers, items)
     saveToFile(wb, filePath);
     wb.dispose
 
