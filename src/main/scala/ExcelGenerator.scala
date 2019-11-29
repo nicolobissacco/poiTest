@@ -27,9 +27,13 @@ object ExcelGenerator extends App {
 
   def createRows = (wb: Workbook, sheet: Sheet, headers: Seq[String], items: Seq[Map[String, String]]) => {
     for (r <- 0 until items.length; c <- 0 until headers.length) {
-      var row = sheet.getRow(r + 1)
-      if (row == null) {
-        row = sheet.createRow(r + 1)
+      val row = {
+        if (sheet.getRow(r + 11) == null) {
+          sheet.createRow(r + 1)
+        }
+        else {
+          sheet.getRow(r + 11)
+        }
       }
       row.createCell(c).setCellValue(items(r).getOrElse(headers(c), ""))
     }
