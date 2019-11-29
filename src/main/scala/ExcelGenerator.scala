@@ -1,27 +1,22 @@
 import java.io.FileOutputStream
-import java.time.{Duration, LocalDateTime}
 import java.time.format.DateTimeFormatter
-
-import org.apache.poi.ss.usermodel.{Sheet, Workbook}
-import org.apache.poi.xssf.streaming.SXSSFWorkbook
-import org.apache.poi.xssf.usermodel.XSSFWorkbook
+import java.time.{Duration, LocalDateTime}
 
 object ExcelGenerator extends App {
-  val headers: Seq[String] = for (i <- 0 until 70) yield s"ID-${i}"
-  val products: Seq[Map[String, String]] = for (i <- 0 until 100000) yield (for (c <- 0 until headers.length) yield headers(c) -> s"desc-P${i}-${c}").toMap
+  val fmt = DateTimeFormatter.ofPattern("HH:mm:ss")
+  val headers: Seq[String] = for (i <- 0 until 70) yield "some awesome example data" //s"ID-${i}"
+  val products: Seq[Map[String, String]] = for (i <- 0 until 100000) yield (for (c <- 0 until headers.length) yield headers(c) -> "some awesome example data").toMap //s"desc-P${i}-${c}"
 
   generateXlsx("file.xlsx", headers, products)
 
   def generateXlsx = (filePath: String, headers: Seq[String], items: Seq[Map[String, String]]) => {
-    val fmt = DateTimeFormatter.ofPattern("HH:mm:ss")
-
     val t1 = LocalDateTime.now()
     println(s"START ${t1.format(fmt)}")
 
-    val wb = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE)
+    val wb = new org.apache.poi.xssf.streaming.SXSSFWorkbook(org.apache.poi.xssf.streaming.SXSSFWorkbook.DEFAULT_WINDOW_SIZE)
     //val wb = new XSSFWorkbook
     val sheet1 = wb.createSheet("Foglio1")
-
+    
     createHeader(wb, sheet1, headers)
     createRows(wb, sheet1, headers, items)
     saveToFile(wb, filePath);
@@ -32,7 +27,7 @@ object ExcelGenerator extends App {
     println(s"DIFF ${Duration.between(t1, t2).getSeconds}")
   }
 
-  def createRows = (wb: Workbook, sheet: Sheet, headers: Seq[String], items: Seq[Map[String, String]]) => {
+  def createRows = (wb: org.apache.poi.ss.usermodel.Workbook, sheet: org.apache.poi.ss.usermodel.Sheet, headers: Seq[String], items: Seq[Map[String, String]]) => {
     for (r <- 0 until items.length; c <- 0 until headers.length) {
       val row = {
         if (sheet.getRow(r + 1) == null) {
@@ -46,7 +41,7 @@ object ExcelGenerator extends App {
     }
   }
 
-  def createHeader = (wb: Workbook, sheet: Sheet, headers: Seq[String]) => {
+  def createHeader = (wb: org.apache.poi.ss.usermodel.Workbook, sheet: org.apache.poi.ss.usermodel.Sheet, headers: Seq[String]) => {
     val boldStyle = wb.createCellStyle
     val boldFont = wb.createFont
     boldFont.setBold(true)
@@ -60,7 +55,7 @@ object ExcelGenerator extends App {
     }
   }
 
-  def saveToFile = (wb: Workbook, filePath: String) => {
+  def saveToFile = (wb: org.apache.poi.ss.usermodel.Workbook, filePath: String) => {
     val fos = new FileOutputStream(filePath)
     wb.write(fos)
     fos.close()
