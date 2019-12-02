@@ -13,7 +13,7 @@ object ExcelGenerator extends App {
     val t1 = LocalDateTime.now()
     println(s"START ${t1.format(fmt)}")
 
-    val wb = new org.apache.poi.xssf.streaming.SXSSFWorkbook(org.apache.poi.xssf.streaming.SXSSFWorkbook.DEFAULT_WINDOW_SIZE)
+    val wb = new org.apache.poi.xssf.streaming.SXSSFWorkbook()
     //val wb = new XSSFWorkbook
     val sheet1 = wb.createSheet("Foglio1")
 
