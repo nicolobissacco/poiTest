@@ -16,7 +16,7 @@ object ExcelGenerator extends App {
     val wb = new org.apache.poi.xssf.streaming.SXSSFWorkbook(org.apache.poi.xssf.streaming.SXSSFWorkbook.DEFAULT_WINDOW_SIZE)
     //val wb = new XSSFWorkbook
     val sheet1 = wb.createSheet("Foglio1")
-    
+
     createHeader(wb, sheet1, headers)
     createRows(wb, sheet1, headers, items)
     saveToFile(wb, filePath);
